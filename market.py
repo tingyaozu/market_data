@@ -1,6 +1,7 @@
 import scrapy
 from bs4 import BeautifulSoup
 from scrapy.crawler import CrawlerProcess
+import pandas as pd
 
 class MarketSpider(scrapy.Spider):
     name = 'market_spider'
@@ -55,9 +56,6 @@ def run_spider():
 
     process.start()
 
-
- 
-    # print(news_within_24_hours)
 
 # Run the spider
 if __name__ == '__main__':
