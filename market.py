@@ -7,7 +7,7 @@ class MarketSpider(scrapy.Spider):
     name = 'market_spider'
     start_urls = ['https://www.klsescreener.com/v2/screener/quote_results']
     
-    #market klse
+    # Define the scraping process
     def parse(self, response):
         # Parse the HTML with BeautifulSoup
         market_html = BeautifulSoup(response.body, 'html.parser')
@@ -30,8 +30,7 @@ class MarketSpider(scrapy.Spider):
                 first_col = cols[0].find('a')
                 if first_col:
                     name_text = first_col.get_text(strip=True)
-                    hyperlink = first_col['href']
-                    hyperlink = f'https://www.klsescreener.com{hyperlink}'
+                    hyperlink = f'https://www.klsescreener.com{first_col["href"]}'
                 else:
                     name_text = cols[0].get_text(strip=True)
 
@@ -39,29 +38,27 @@ class MarketSpider(scrapy.Spider):
                 other_columns = [col.get_text(strip=True) for col in cols[1:-2]]
                 rows.append([name_text] + other_columns + [hyperlink])
 
-        # Create a DataFrame from scraped data
-        scraped_data = pd.DataFrame(rows, columns=headers)
+        if rows:
+            # Create a DataFrame from scraped data
+            scraped_data = pd.DataFrame(rows, columns=headers)
 
-        # Save the updated dataset
-        scraped_data.to_csv('market_data.csv', index=False)
-        self.log(" data saved to market_data.csv.")
+            # Save the updated dataset to a CSV file
+            scraped_data.to_csv('market_data.csv', index=False)
+            self.log("Data saved to market_data.csv.")
 
+            # Print the scraped data to the console
+            self.log("Scraped Data:\n" + scraped_data.to_string(index=False))
+        else:
+            self.log("No rows extracted from the table.")
 
-# Function to run the spider and print the output
+# Function to run the spider
 def run_spider():
     process = CrawlerProcess(settings={
-      "LOG_LEVEL": "ERROR",  # Suppress unnecessary logs for clarity
-     })
+        "LOG_LEVEL": "DEBUG",  # Adjust log level to DEBUG to see console output
+    })
     process.crawl(MarketSpider)
-
     process.start()
-
-
- 
-    # print(news_within_24_hours)
 
 # Run the spider
 if __name__ == '__main__':
     run_spider()
-    
-    
