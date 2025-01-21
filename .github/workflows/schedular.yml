@@ -2,6 +2,7 @@ name: Scheduled Task (Market Data)
 
 on:
   schedule:
+   - cron: "0 0 * * *"  # Every day at midnight UTC
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
