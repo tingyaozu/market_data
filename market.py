@@ -43,7 +43,7 @@ class MarketSpider(scrapy.Spider):
             scraped_data = pd.DataFrame(rows, columns=headers)
 
             # Save the updated dataset to a CSV file
-            scraped_data.to_csv('market_data.csv', index=False)
+            scraped_data.to_csv('./market_data.csv', index=False)
             self.log("Data saved to market_data.csv.")
 
             # Print the scraped data to the console
