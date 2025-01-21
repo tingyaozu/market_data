@@ -2,7 +2,7 @@ name: Scheduled Task (Market Data)
 
 on:
   schedule:
-   - cron: "0 0 * * *"  # Every day at midnight UTC
+    - cron: "0 0 * * *"  # Every day at midnight UTC
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
@@ -28,3 +28,18 @@ jobs:
           echo "Running scheduled task"
           python market.py
 
+      - name: List Directory Contents
+        run: ls -l
+        # Lists all files in the current directory for debugging
+
+      - name: Print CSV File Content
+        if: success()
+        run: cat ./market_data.csv
+        # Prints the content of market_data.csv to the logs to confirm data
+
+      - name: Save CSV File as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: market_data
+          path: ./market_data.csv
+        # Saves the market_data.csv file as an artifact for inspection
